@@ -88,7 +88,7 @@ app.message("!ping", async ({ message, say }) => {
 
 	const updateJob = setInterval(async () => {
 		let now = new Date();
-		if (true /*now.getMinutes() !== m*/) {
+		if (now.getMinutes() !== m) {
 			m = now.getMinutes();
 			await randomPushPfp();
 		}
