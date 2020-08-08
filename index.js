@@ -1,4 +1,6 @@
 const fs = require("fs");
+const _ = require("lodash");
+const axios = require("axios").default;
 require("dotenv").config();
 const { App } = require("@slack/bolt");
 
@@ -13,22 +15,53 @@ app.message("hello", async ({ message, say }) => {
 	await say(`Hey there <@${message.user}>!`);
 });
 
-app.message("test", async ({ message, say }) => {
-	try {
-		const result = await app.client.users.setPhoto({
-			token: process.env.SLACK_OAUTH_TOKEN,
-			image: fs.readFileSync("testpfp.png"),
-		});
-
-		await say("done");
-	} catch (err) {
-		console.error(err);
-	}
-});
-
 (async () => {
+	// Links to pfps
+	let pfpsUrls = [
+		"http://cloud-diq40qzd7.vercel.app/testpfp.png",
+		"http://cloud-ee3xmll4k.vercel.app/testpfp2.png",
+		"http://cloud-ee3xmll4k.vercel.app/testpfp3.png",
+		"http://cloud-ee3xmll4k.vercel.app/testpfp4.png",
+		"http://cloud-ee3xmll4k.vercel.app/testpfpt.png",
+	];
+
+	// Last minute of execution
+	let m = new Date().getMinutes() - 1;
+	// Last pfp's index
+	let oldIndex = -1;
+
+	// Repeated func
+	const randomPushPfp = async () => {
+		// Choose an index not equal to the last index (this algo makes it impossible to choose last pfp on first iteration)
+		let i = oldIndex + 1;
+		if (i >= pfpsUrls.length) {
+			i = 0;
+			pfpsUrls = _.shuffle(pfpsUrls);
+		}
+		oldIndex = i;
+
+		try {
+			// Push pfp
+			const res = await axios.get(pfpsUrls[i], { responseType: "arraybuffer" });
+			const result = await app.client.users.setPhoto({
+				token: process.env.SLACK_OAUTH_TOKEN,
+				image: Buffer.from(res.data),
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	// Start your app
 	await app.start(process.env.PORT || 3000);
 
 	console.log("⚡️ Bolt app is running!");
+
+	const updateJob = setInterval(async () => {
+		let now = new Date();
+		if (true /*now.getMinutes() !== m*/) {
+			m = now.getMinutes();
+			await randomPushPfp();
+		}
+	}, 1000 * 10);
 })();
