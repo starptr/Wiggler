@@ -9,13 +9,42 @@ const app = new App({
 	signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
+const fancyLog = msg => {
+	if (msg.message) console.error(msg);
+	else console.log(msg);
+
+	app.client.chat.postMessage({
+		token: process.env.SLACK_BOT_TOKEN,
+		//ID or name
+		channel: process.env.SLACK_LOG_CHANNEL,
+		text: msg.message || msg,
+		attachments: [
+			{
+				color: msg.message ? "#ff0000" : "#dddddd",
+				blocks: [
+					{
+						type: "section",
+						text: {
+							type: "plain_text",
+							text: `${msg.message || msg}`,
+							emoji: false,
+						},
+					},
+				],
+			},
+		],
+	});
+};
+
 // Listens to incoming messages that contain "hello"
-app.message("hello", async ({ message, say }) => {
+app.message("!ping", async ({ message, say }) => {
 	// say() sends a message to the channel where the event was triggered
-	await say(`Hey there <@${message.user}>!`);
+	await say(`Pong!`);
 });
 
 (async () => {
+	// Error log to a channel
+
 	// Links to pfps
 	let pfpsUrls = [
 		"http://cloud-diq40qzd7.vercel.app/testpfp.png",
@@ -48,14 +77,14 @@ app.message("hello", async ({ message, say }) => {
 				image: Buffer.from(res.data),
 			});
 		} catch (err) {
-			console.error(err);
+			fancyLog(err);
 		}
 	};
 
 	// Start your app
 	await app.start(process.env.PORT || 3000);
 
-	console.log("⚡️ Bolt app is running!");
+	fancyLog("⚡️ Bolt app is running!");
 
 	const updateJob = setInterval(async () => {
 		let now = new Date();
