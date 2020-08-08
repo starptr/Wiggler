@@ -47,11 +47,14 @@ app.message("!ping", async ({ message, say }) => {
 
 	// Links to pfps
 	let pfpsUrls = [
-		"http://cloud-diq40qzd7.vercel.app/testpfp.png",
-		"http://cloud-ee3xmll4k.vercel.app/testpfp2.png",
-		"http://cloud-ee3xmll4k.vercel.app/testpfp3.png",
-		"http://cloud-ee3xmll4k.vercel.app/testpfp4.png",
-		"http://cloud-ee3xmll4k.vercel.app/testpfpt.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony1.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony2.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony3.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony4.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony5.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony6.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony7.png",
+		"http://cloud-2to2o6psz.vercel.app/cartoony8.png",
 	];
 
 	// Last minute of execution
