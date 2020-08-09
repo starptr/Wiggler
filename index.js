@@ -17,7 +17,7 @@ const fancyLog = msg => {
 		token: process.env.SLACK_BOT_TOKEN,
 		//ID or name
 		channel: process.env.SLACK_LOG_CHANNEL,
-		text: msg.message || msg,
+		text: null,
 		attachments: [
 			{
 				color: msg.message ? "#ff0000" : "#dddddd",
